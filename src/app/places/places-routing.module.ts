@@ -29,11 +29,11 @@ const routes: Routes = [
           },
           {
             path: 'new',
-            loadChildren: './offers/new-offer.module#NewOfferPageModule'
+            loadChildren: './offers/new-offer/new-offer.module#NewOfferPageModule'
           },
           {
             path: 'edit/:placeId',
-            loadChildren: './offers/edit-offer.module#EditOfferPageModule'
+            loadChildren: './offers/edit-offer/edit-offer.module#EditOfferPageModule'
           },
           {
             path: ':placeId',
