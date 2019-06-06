@@ -32,7 +32,6 @@ export class AuthPage implements OnInit {
           this.router.navigateByUrl('/places/tabs/discover');
           loader.dismiss();
         }, 2500);
-
       });
 
   }
