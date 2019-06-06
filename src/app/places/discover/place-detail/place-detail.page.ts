@@ -33,33 +33,7 @@ export class PlaceDetailPage implements OnInit {
     });
   }
 
-  async onBookPlace() {
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Choose an Action',
-      buttons: [
-        {
-          text: 'Select Date',
-          handler: () => {
-            this.openBookingModal('select');
-          }
-        },
-        {
-          text: 'Random Date',
-          handler: () => {
-            this.openBookingModal('random');
-          }
-        },
-        {
-          text: 'Cancel',
-          role: 'destructive'
-        }
-      ]
-    });
-
-    actionSheet.present();
-  }
-
-  private openBookingModal(mode: 'select' | 'random') {
+  onBookPlace() {
     this.modalCtrl
       .create({
         component: CreateBookingComponent,
@@ -73,7 +47,7 @@ export class PlaceDetailPage implements OnInit {
       })
       .then(result => {
         if (result.role === 'confirm') {
-          console.log('BOOKED!!!');
+          console.log(result.data);
         }
       });
   }

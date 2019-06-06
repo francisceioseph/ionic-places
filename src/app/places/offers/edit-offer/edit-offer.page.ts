@@ -3,6 +3,7 @@ import { NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { PlacesService } from '../../places.service';
 import { Place } from '../../place.model';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-offer',
@@ -11,6 +12,7 @@ import { Place } from '../../place.model';
 })
 export class EditOfferPage implements OnInit {
   place: Place;
+  form: FormGroup;
 
   constructor(
     private navCtrl: NavController,
@@ -27,10 +29,41 @@ export class EditOfferPage implements OnInit {
 
       const placeId = paramMap.get('placeId');
       this.place = this.placesService.getPlaceById(placeId);
+      this.form = this.initFormGroup(this.place);
     });
   }
 
   getDefaultHref() {
     return `/places/tabs/offers/${this.place.id}`;
+  }
+
+  onUpdateOffer() {
+    if (this.form.invalid) {
+      return;
+    }
+
+    console.log(this.form.value);
+  }
+
+  private initFormGroup(place: Place): FormGroup {
+    return new FormGroup({
+      title: new FormControl(place.title, {
+        updateOn: 'change',
+        validators: [
+          Validators.required
+        ]
+      }),
+      description: new FormControl(place.description, {
+        updateOn: 'change',
+        validators: [Validators.required, Validators.maxLength(200)]
+      }),
+      price: new FormControl(place.price, {
+        updateOn: 'change',
+        validators: [
+          Validators.required,
+          Validators.min(1)
+        ]
+      }),
+    });
   }
 }
