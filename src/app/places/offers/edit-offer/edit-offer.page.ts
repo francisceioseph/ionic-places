@@ -1,23 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { NavController, LoadingController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { PlacesService } from '../../places.service';
 import { Place } from '../../place.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-offer',
   templateUrl: './edit-offer.page.html',
   styleUrls: ['./edit-offer.page.scss'],
 })
-export class EditOfferPage implements OnInit {
+export class EditOfferPage implements OnInit, OnDestroy {
   place: Place;
   form: FormGroup;
+  private placeSub: Subscription;
 
   constructor(
     private navCtrl: NavController,
     private route: ActivatedRoute,
-    private placesService: PlacesService
+    private placesService: PlacesService,
+    private loadingCtrl: LoadingController
   ) { }
 
   ngOnInit() {
@@ -28,9 +31,18 @@ export class EditOfferPage implements OnInit {
       }
 
       const placeId = paramMap.get('placeId');
-      this.place = this.placesService.getPlaceById(placeId);
-      this.form = this.initFormGroup(this.place);
+
+      this.placeSub = this.placesService.getPlaceById(placeId).subscribe(place => {
+        this.place = place;
+        this.form = this.initFormGroup(place);
+      });
     });
+  }
+
+  ngOnDestroy() {
+    if (this.placeSub) {
+      this.placeSub.unsubscribe();
+    }
   }
 
   getDefaultHref() {
@@ -42,7 +54,28 @@ export class EditOfferPage implements OnInit {
       return;
     }
 
-    console.log(this.form.value);
+    this.loadingCtrl
+      .create({
+        spinner: 'dots',
+        message: 'Updating place...'
+      })
+      .then(el => {
+        el.present();
+
+        this.placesService
+          .updatePlace(
+            this.place.id,
+            this.form.value.title,
+            this.form.value.description
+          )
+          .subscribe(() => {
+            el.dismiss();
+            this.form.reset();
+            this.navCtrl.navigateBack('/places/tabs/offers');
+          });
+      });
+
+
   }
 
   private initFormGroup(place: Place): FormGroup {

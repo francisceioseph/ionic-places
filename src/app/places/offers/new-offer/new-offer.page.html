@@ -64,14 +64,18 @@
         <ion-col size-sm="3" size-sm="3">
           <ion-item>
             <ion-label>Available from</ion-label>
-            <ion-datetime formControlName="dateFrom"></ion-datetime>
+            <ion-datetime ngModel formControlName="dateFrom"></ion-datetime>
           </ion-item>
         </ion-col>
 
         <ion-col size-sm="3" size-sm="3">
           <ion-item>
             <ion-label>Available to</ion-label>
-            <ion-datetime formControlName="dateTo"></ion-datetime>
+            <ion-datetime
+              formControlName="dateTo"
+              [min]="form.get('dateFrom').value"
+              [disabled]="form.get('dateFrom').invalid"
+            ></ion-datetime>
           </ion-item>
         </ion-col>
       </ion-row>

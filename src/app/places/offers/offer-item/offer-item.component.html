@@ -11,12 +11,12 @@
     <div>
       <ion-icon name="calendar" color="secondary"></ion-icon>
       <ion-text class="space-left" color="secondary">
-        {{ getDummyDate() | date: "MM/dd/yyyy" }}
+        {{ offer.availableFrom | date: "MM/dd/yyyy" }}
       </ion-text>
       <span class="space-left"> to </span>
       <ion-icon class="space-left" name="calendar" color="secondary"></ion-icon>
       <ion-text class="space-left" color="secondary">
-        {{ getDummyDate() | date: "MM/dd/yyyy" }}
+        {{ offer.availableTo | date: "MM/dd/yyyy" }}
       </ion-text>
     </div>
   </ion-label>
